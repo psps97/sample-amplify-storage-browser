@@ -10,25 +10,17 @@ import { Amplify } from 'aws-amplify';
 import { Authenticator, Button } from '@aws-amplify/ui-react';
 
 // Add existing bucket to storage config
-if (config.storage && config.storage.buckets) {
-  const alreadyAdded = config.storage.buckets.some(
-    (b: any) => b.bucket_name === 'email-attach-xxx'
-  );
-  if (!alreadyAdded) {
-    config.storage.buckets.push({
-      name: 'emailAttachBucket',
-      bucket_name: 'email-attach-xxx',
-      aws_region: 'ap-northeast-2',
-      paths: {
-        '*': {
-          authenticated: ['get', 'list', 'write', 'delete'],
-        },
-      },
-    });
-  }
+const amplifyConfig = config as any;
+if (amplifyConfig.storage?.buckets) {
+  amplifyConfig.storage.buckets.push({
+    name: 'emailAttachBucket',
+    bucket_name: 'email-attach-xxx',
+    aws_region: 'ap-northeast-2',
+    paths: { '*': { authenticated: ['get', 'list', 'write', 'delete'] } },
+  });
 }
 
-Amplify.configure(config);
+Amplify.configure(amplifyConfig);
 
 const { StorageBrowser } = createStorageBrowser({
   config: createAmplifyAuthAdapter(),
